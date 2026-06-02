@@ -2,7 +2,7 @@ package com.henrique.foodstorage.dtos.request;
 
 import jakarta.validation.constraints.*;
 
-public record RegisterRequest(
+public record RegisterUserDTO(
         @Size(max = 100)
         @NotBlank
         String username,

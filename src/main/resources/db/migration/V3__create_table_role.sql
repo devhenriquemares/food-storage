@@ -1,4 +1,4 @@
-CREATE TABLE Role (
+CREATE TABLE "Role" (
     id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    name roles NOT NULL
+    name roles NOT NULL UNIQUE
 );

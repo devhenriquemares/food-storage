@@ -8,6 +8,7 @@ import lombok.Setter;
 import java.util.Set;
 
 @Entity
+@Table(name = "\"Role\"")
 @Setter
 @Getter
 public class Role {
@@ -16,6 +17,7 @@ public class Role {
     private Integer id;
 
     @Enumerated(EnumType.STRING)
+    @Column(unique = true)
     private Roles name;
 
     @ManyToMany(mappedBy = "roles")

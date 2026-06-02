@@ -1,11 +1,13 @@
 package com.henrique.foodstorage.entity;
 
+import com.henrique.foodstorage.enums.Roles;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,6 +17,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
+@Table(name = "\"UserAccount\"")
 @Getter
 @Setter
 public class UserAccount implements UserDetails {
@@ -23,15 +26,17 @@ public class UserAccount implements UserDetails {
     private UUID id;
 
     @Size(max = 100)
-    private String username;
+    @Column(name = "username")
+    private String name;
 
     private String password;
 
+    @Column(unique = true)
     private String email;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "UserRoles",
+            name = "\"UserRoles\"",
             joinColumns = @JoinColumn(name = "userID"),
             inverseJoinColumns = @JoinColumn(name = "roleID")
     )

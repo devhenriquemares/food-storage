@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -33,12 +34,6 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        int saltLength = 16;
-        int hashLength = 32;
-        int parallelism = 1;
-        int memory = 64 * 1024;
-        int iterations = 3;
-
-        return new Argon2PasswordEncoder(saltLength, hashLength, parallelism, memory, iterations);
+        return new BCryptPasswordEncoder();
     }
 }
