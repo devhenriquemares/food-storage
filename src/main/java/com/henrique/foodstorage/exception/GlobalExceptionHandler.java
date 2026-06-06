@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -24,26 +25,25 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    private ResponseEntity<ErrorResponse> handleError(HttpStatus status, List<BindExceptionFieldErrorResponse> errors) {
+    private ResponseEntity<ErrorResponse> handleError(HttpStatus status, String message, List<BindExceptionFieldErrorResponse> errors, Exception ex) {
+        log.error("{} - {}", ex.getClass(), ex.getMessage(), ex);
+
         ErrorResponse body = new ErrorResponse(
                 status.value(),
                 status.getReasonPhrase(),
-                null,
+                message,
                 errors
         );
 
         return ResponseEntity.status(status).body(body);
     }
 
-    private ResponseEntity<ErrorResponse> handleError(HttpStatus status, String message) {
-        ErrorResponse body = new ErrorResponse(
-                status.value(),
-                status.getReasonPhrase(),
-                message,
-                List.of()
-        );
+    private ResponseEntity<ErrorResponse> handleError(HttpStatus status, List<BindExceptionFieldErrorResponse> errors, Exception ex) {
+        return this.handleError(status, "", errors, ex);
+    }
 
-        return ResponseEntity.status(status).body(body);
+    private ResponseEntity<ErrorResponse> handleError(HttpStatus status, String message, Exception ex) {
+        return this.handleError(status, message, List.of(), ex);
     }
 
     @ExceptionHandler(BindException.class)
@@ -57,11 +57,16 @@ public class GlobalExceptionHandler {
                 ))
                 .toList();
 
-        return this.handleError(HttpStatus.BAD_REQUEST, errors);
+        return this.handleError(HttpStatus.BAD_REQUEST, errors, ex);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleBadCredentialsException(BadCredentialsException ex) {
+        return this.handleError(HttpStatus.BAD_REQUEST, "Email or password invalid", ex);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleUnexpectedException(Exception ex) {
-        return this.handleError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        return this.handleError(HttpStatus.INTERNAL_SERVER_ERROR, "Some internal server error occurred", ex);
     }
 }

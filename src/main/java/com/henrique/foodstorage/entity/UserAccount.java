@@ -37,8 +37,8 @@ public class UserAccount implements UserDetails {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "\"UserRoles\"",
-            joinColumns = @JoinColumn(name = "userID"),
-            inverseJoinColumns = @JoinColumn(name = "roleID")
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
 

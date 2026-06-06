@@ -1,6 +1,6 @@
 CREATE TABLE "UserRoles" (
-    "userID" UUID NOT NULL REFERENCES "UserAccount"(id),
-    "roleID" INT NOT NULL REFERENCES "Role"(id),
+    user_id UUID NOT NULL REFERENCES "UserAccount"(id),
+    role_id INT NOT NULL REFERENCES "Role"(id),
 
-    PRIMARY KEY ("userID", "roleID")
+    PRIMARY KEY (user_id, role_id)
 );

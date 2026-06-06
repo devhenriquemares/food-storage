@@ -1,8 +1,12 @@
 package com.henrique.foodstorage.dtos.request;
 
+import com.henrique.foodstorage.enums.Roles;
 import jakarta.validation.constraints.*;
 
-public record RegisterUserDTO(
+import java.util.List;
+import java.util.Set;
+
+public record CreateUserDTO(
         @Size(min = 3, max = 100)
         @NotBlank
         String username,
@@ -13,6 +17,9 @@ public record RegisterUserDTO(
 
         @Email
         @NotBlank
-        String email
+        String email,
+
+        @NotEmpty
+        Set<@NotNull Roles> roles
 ) {
 }
